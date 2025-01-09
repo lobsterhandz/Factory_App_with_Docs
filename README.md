@@ -19,6 +19,7 @@ This Flask-based Factory Management System provides an API to manage employees, 
 - **Error Logging:** Logs errors and server activities using RotatingFileHandler.
 - **JWT Security:** Implements token-based authentication and authorization with role-based access control.
 - **Multi-Level Admin Roles:** Supports 'super_admin', 'admin', and 'user' roles for scalability and secure access.
+- **Swagger UI for API docs integrated into app.py via YAML file in static folder
 
 ---
 
@@ -27,6 +28,7 @@ This Flask-based Factory Management System provides an API to manage employees, 
 - **Backend:** Flask (Python)
 - **Database:** MySQL with SQLAlchemy ORM
 - **API Testing:** Postman
+- **Documentation** SwaggerUI
 - **Rate Limiting:** Flask-Limiter
 - **Migrations:** Flask-Migrate
 - **Authentication:** PyJWT
@@ -75,7 +77,7 @@ factory_management/
 │   ├── analytic_queries.py          # Complex queries for analytics
 ├── logs/ # Logs generated for debugging and monitoring
 │   ├── factory_management.log
-├── Tests/ 
+├── tests/ 
 │   ├── __init__.py                # Marks the folder as a Python package
 │   ├── mock_data.json             # Centralized mock data for testing
 │   ├── mock_data.py               # Script to load and preprocess mock data
@@ -89,6 +91,8 @@ factory_management/
 │   ├── test_production.py         # Tests for production management endpoints
 │   ├── test_analytics.py          # Tests for analytics and reporting endpoints
 │   ├── test_utils.py              # Tests for utility functions (e.g., JWT, error responses)
+├── static/
+│   ├── apispec.YAML 
 ├── config.py                         # Configuration settings
 ├── limiter.py                        # Rate limiter setup
 ├── requirements.txt                  # Required Python packages
