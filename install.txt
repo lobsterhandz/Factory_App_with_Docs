@@ -1,0 +1,56 @@
+# Factory Management System - Installation Guide
+
+## Prerequisites:
+1. Python 3.10 or later
+2. MySQL Server (compatible version)
+3. MySQL Workbench for database management
+4. Postman for API testing
+
+## Step 1: Clone Repository
+```bash
+git clone <repository-url>
+cd factory-management-System
+
+## Step 2: Create Virtual Environment
+bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+
+## Step 3: Install Dependencies
+```bash
+pip install -r requirements.txt
+
+## Step 4: Configure Database
+Open MySQL Workbench and create the database:
+sql
+
+CREATE DATABASE factory_db;
+
+-Update database credentials in config.py:
+python
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:<password>@localhost/factory_db'
+
+## Step 5: Apply Migrations
+```bash
+flask db init
+flask db migrate -m "Initial migration."
+flask db upgrade
+
+## Step 6: Run the Application
+```bash
+python app.py
+
+Access the application at:
+http://127.0.0.1:5000/
+Step 7: API Testing
+Use Postman to test endpoints:
+
+Employees: GET /employees
+Products: GET /products
+Orders: POST /orders
+
+## Notes:
+Make sure the database server is running before starting the app.
+Test rate limiting using repeated requests to observe behavior.
+Use environment variables to secure sensitive information (e.g., database credentials).

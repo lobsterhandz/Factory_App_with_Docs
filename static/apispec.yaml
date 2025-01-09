@@ -1,0 +1,661 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Factory Management API - Employees
+  description: API documentation for employee-related operations in the Factory Management System.
+
+paths:
+  /employees:
+   post:
+    summary: Create a new employee
+    description: Create a new employee with the specified details.
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - name
+            - position
+            - email
+            - phone
+          properties:
+            name:
+              type: string
+              description: Employee's name.
+            position:
+              type: string
+              description: Employee's job position.
+            email:
+              type: string
+              description: Employee's email.
+            phone:
+              type: string
+              description: Employee's phone number.
+    responses:
+      201:
+        description: Employee created successfully.
+      400:
+        description: Validation or creation error.
+      500:
+        description: Internal server error.
+   get:
+    summary: Get paginated employees
+    description: Retrieve paginated employees with optional sorting and metadata.
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        description: Page number (default:1).
+      - name: per_page
+        in: query
+        type: integer
+        description: Items per page (default:10, max:100).
+      - name: sort_by
+        in: query
+        type: string
+        description: Field to sort by ('name', 'position', 'email', 'phone') (default:'name').
+      - name: sort_order
+        in: query
+        type: string
+        description: Sort order ('asc', 'desc') (default:'asc').
+      - name: include_meta
+        in: query
+        type: boolean
+        description: Include metadata (default:true).
+    responses:
+      200:
+        description: Paginated list of employees retrieved successfully.
+      400:
+        description: Validation error.
+      500:
+        description: Internal server error.
+
+  /employees/{employee_id}:
+    get:
+      summary: Get employee by ID
+      description: Retrieve an employee by their ID.
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the employee to retrieve.
+      responses:
+        200:
+          description: Employee retrieved successfully.
+        404:
+          description: Employee not found.
+    put:
+      summary: Update employee by ID
+      description: Update an employee's details by their ID.
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the employee to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Updated name of the employee.
+              position:
+                type: string
+                description: Updated position of the employee.
+              email:
+                type: string
+                description: Updated email of the employee.
+              phone:
+                type: string
+                description: Updated phone number of the employee.
+      responses:
+        200:
+          description: Employee updated successfully.
+        400:
+          description: Validation error.
+        404:
+          description: Employee not found.
+    delete:
+      summary: Delete employee by ID
+      description: Delete an employee by their ID.
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the employee to delete.
+      responses:
+        200:
+          description: Employee deleted successfully.
+        404:
+          description: Employee not found.
+  /analytics/employee-performance:
+    get:
+      summary: Analyze employee performance
+      description: Analyze the total quantity of products each employee has produced.
+      responses:
+        200:
+          description: Success
+        500:
+          description: Internal server error
+  /analytics/top-products:
+    get:
+      summary: Get top-selling products
+      description: Fetch top-selling products based on total quantity ordered.
+      responses:
+        200:
+          description: Success
+        500:
+          description: Internal server error
+  /analytics/customer-lifetime-value:
+    get:
+      summary: Calculate customer lifetime value
+      description: Calculate the total value of orders placed by each customer.
+      parameters:
+        - name: threshold
+          in: query
+          type: number
+          description: Minimum total order value to filter customers (default:1000)
+      responses:
+        200:
+          description: Success
+        400:
+          description: Invalid threshold value
+        500:
+          description: Internal server error
+  /analytics/production-efficiency:
+    get:
+      summary: Evaluate production efficiency
+      description: Evaluate production efficiency by calculating the total quantity produced for each product on a specific date.
+      parameters:
+        - name: date
+          in: query
+          type: string
+          description: Date in YYYY-MM-DD format (required)
+      responses:
+        200:
+          description: Success
+        400:
+          description: Date is required
+        500:
+          description: Internal server error
+  /customers:
+    post:
+      summary: Create a new customer
+      description: Create a customer with the specified details.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - phone
+            properties:
+              name:
+                type: string
+                description: Customer's name.
+              email:
+                type: string
+                description: Customer's email.
+              phone:
+                type: string
+                description: Customer's phone number.
+      responses:
+        201:
+          description: Customer created successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated customers
+      description: Retrieves paginated customers with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default:1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default:10, max:100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('name','email','phone') (default:'name').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sort order ('asc', 'desc') (default:'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default:true).
+      responses:
+        200:
+          description: Paginated list of customers retrieved successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+  /customers/{customer_id}:
+    get:
+      summary: Get customer by ID
+      description: Retrieve a customer by their ID.
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the customer to retrieve.
+      responses:
+        200:
+          description: Customer retrieved successfully.
+        404:
+          description: Customer not found.
+    put:
+      summary: Update customer by ID
+      description: Update a customer's details by their ID.
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the customer to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Updated name of the customer.
+              email:
+                type: string
+                description: Updated email of the customer.
+              phone:
+                type: string
+                description: Updated phone number of the customer.
+      responses:
+        200:
+          description: Customer updated successfully.
+        400:
+          description: Validation error.
+        404:
+          description: Customer not found.
+    delete:
+      summary: Delete customer by ID
+      description: Delete a customer by their ID.
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the customer to delete.
+      responses:
+        200:
+          description: Customer deleted successfully.
+        404:
+          description: Customer not found.
+  /orders:
+    post:
+      summary: Create a new order
+      description: Create a new order with the specified details.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - customer_id
+              - product_id
+              - quantity
+            properties:
+              customer_id:
+                type: integer
+                description: ID of the customer placing the order.
+              product_id:
+                type: integer
+                description: ID of the product being ordered.
+              quantity:
+                type: integer
+                description: Quantity of the product being ordered.
+      responses:
+        201:
+          description: Order created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated orders
+      description: Retrieve paginated orders with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default:1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default:10, max:100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('created_at', 'quantity', 'total_price') (default:'created_at').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sorting order ('asc', 'desc') (default:'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default:true).
+      responses:
+        200:
+          description: Paginated list of orders retrieved successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+  /orders/{order_id}:
+    get:
+      summary: Get order by ID
+      description: Retrieve an order by its ID.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the order to retrieve.
+      responses:
+        200:
+          description: Order retrieved successfully.
+        404:
+          description: Order not found.
+    put:
+      summary: Update order by ID
+      description: Update the quantity of an order by its ID.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the order to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              quantity:
+                type: integer
+                description: Updated quantity of the order.
+      responses:
+        200:
+          description: Order updated successfully.
+        400:
+          description: Validation or update error.
+        404:
+          description: Order not found.
+    delete:
+      summary: Delete order by ID
+      description: Delete an order by its ID.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the order to delete.
+      responses:
+        200:
+          description: Order deleted successfully.
+        404:
+          description: Order not found.
+  /production:
+    post:
+      summary: Create a production record
+      description: Create a new production record.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - product_id
+              - quantity_produced
+              - date_produced
+            properties:
+              product_id:
+                type: integer
+                description: ID of the product produced.
+              quantity_produced:
+                type: integer
+                description: Quantity of the product produced.
+              date_produced:
+                type: string
+                format: date
+                description: Date of production (YYYY-MM-DD).
+      responses:
+        201:
+          description: Production record created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated production records
+      description: Retrieve paginated production records with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default:1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default:10, max:100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('date_produced', 'quantity_produced') (default:'date_produced').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sorting order ('asc', 'desc') (default:'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default:true).
+      responses:
+        200:
+          description: Paginated production records retrieved successfully.
+        500:
+          description: Internal server error.
+  /production/{production_id}:
+    get:
+      summary: Get production record by ID
+      description: Retrieve a production record by its ID.
+      parameters:
+        - name: production_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the production record.
+      responses:
+        200:
+          description: Production record retrieved successfully.
+        404:
+          description: Production record not found.
+    put:
+      summary: Update production record by ID
+      description: Update a production record's details by its ID.
+      parameters:
+        - name: production_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the production record.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              quantity_produced:
+                type: integer
+                description: Updated quantity of the product produced.
+              date_produced:
+                type: string
+                format: date
+                description: Updated date of production (YYYY-MM-DD).
+      responses:
+        200:
+          description: Production record updated successfully.
+        400:
+          description: Validation or update error.
+        404:
+          description: Production record not found.
+    delete:
+      summary: Delete production record by ID
+      description: Delete a production record by its ID.
+      parameters:
+        - name: production_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the production record to delete.
+      responses:
+        200:
+          description: Production record deleted successfully.
+        404:
+          description: Production record not found.
+  /products:
+    post:
+      summary: Create a new product
+      description: Create a new product with the specified details.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - name
+              - price
+            properties:
+              name:
+                type: string
+                description: Name of the product.
+              price:
+                type: number
+                format: float
+                description: Price of the product.
+      responses:
+        201:
+          description: Product created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated products
+      description: Retrieve paginated products with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default:1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default:10, max:100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('name', 'price') (default:'name').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sorting order ('asc', 'desc') (default:'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default:true).
+      responses:
+        200:
+          description: Paginated list of products retrieved successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+  /products/{product_id}:
+    get:
+      summary: Get product by ID
+      description: Retrieve a product by its ID.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the product to retrieve.
+      responses:
+        200:
+          description: Product retrieved successfully.
+        404:
+          description: Product not found.
+    put:
+      summary: Update product by ID
+      description: Update a product's details by its ID.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the product to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Updated name of the product.
+              price:
+                type: number
+                format: float
+                description: Updated price of the product.
+      responses:
+        200:
+          description: Product updated successfully.
+        400:
+          description: Validation or update error.
+        404:
+          description: Product not found.
+    delete:
+      summary: Delete product by ID
+      description: Delete a product by its ID.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the product to delete.
+      responses:
+        200:
+          description: Product deleted successfully.
+        404:
+          description: Product not found.

@@ -1,0 +1,126 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Factory Management API - Production
+  description: API documentation for production-related operations in the Factory Management System.
+
+paths:
+  /production:
+    post:
+      summary: Create a production record
+      description: Create a new production record.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - product_id
+              - quantity_produced
+              - date_produced
+            properties:
+              product_id:
+                type: integer
+                description: ID of the product produced.
+              quantity_produced:
+                type: integer
+                description: Quantity of the product produced.
+              date_produced:
+                type: string
+                format: date
+                description: Date of production (YYYY-MM-DD).
+      responses:
+        201:
+          description: Production record created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated production records
+      description: Retrieve paginated production records with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default: 1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default: 10, max: 100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('date_produced', 'quantity_produced') (default: 'date_produced').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sorting order ('asc', 'desc') (default: 'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default: true).
+      responses:
+        200:
+          description: Paginated production records retrieved successfully.
+        500:
+          description: Internal server error.
+  /production/{production_id}:
+    get:
+      summary: Get production record by ID
+      description: Retrieve a production record by its ID.
+      parameters:
+        - name: production_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the production record.
+      responses:
+        200:
+          description: Production record retrieved successfully.
+        404:
+          description: Production record not found.
+    put:
+      summary: Update production record by ID
+      description: Update a production record's details by its ID.
+      parameters:
+        - name: production_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the production record.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              quantity_produced:
+                type: integer
+                description: Updated quantity of the product produced.
+              date_produced:
+                type: string
+                format: date
+                description: Updated date of production (YYYY-MM-DD).
+      responses:
+        200:
+          description: Production record updated successfully.
+        400:
+          description: Validation or update error.
+        404:
+          description: Production record not found.
+    delete:
+      summary: Delete production record by ID
+      description: Delete a production record by its ID.
+      parameters:
+        - name: production_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the production record to delete.
+      responses:
+        200:
+          description: Production record deleted successfully.
+        404:
+          description: Production record not found.

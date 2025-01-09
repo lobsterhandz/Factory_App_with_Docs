@@ -1,0 +1,124 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Factory Management API - Products
+  description: API documentation for product-related operations in the Factory Management System.
+
+paths:
+  /products:
+    post:
+      summary: Create a new product
+      description: Create a new product with the specified details.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - name
+              - price
+            properties:
+              name:
+                type: string
+                description: Name of the product.
+              price:
+                type: number
+                format: float
+                description: Price of the product.
+      responses:
+        201:
+          description: Product created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated products
+      description: Retrieve paginated products with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default: 1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default: 10, max: 100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('name', 'price') (default: 'name').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sorting order ('asc', 'desc') (default: 'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default: true).
+      responses:
+        200:
+          description: Paginated list of products retrieved successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+  /products/{product_id}:
+    get:
+      summary: Get product by ID
+      description: Retrieve a product by its ID.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the product to retrieve.
+      responses:
+        200:
+          description: Product retrieved successfully.
+        404:
+          description: Product not found.
+    put:
+      summary: Update product by ID
+      description: Update a product's details by its ID.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the product to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Updated name of the product.
+              price:
+                type: number
+                format: float
+                description: Updated price of the product.
+      responses:
+        200:
+          description: Product updated successfully.
+        400:
+          description: Validation or update error.
+        404:
+          description: Product not found.
+    delete:
+      summary: Delete product by ID
+      description: Delete a product by its ID.
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the product to delete.
+      responses:
+        200:
+          description: Product deleted successfully.
+        404:
+          description: Product not found.

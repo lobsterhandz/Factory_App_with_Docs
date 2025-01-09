@@ -1,0 +1,136 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Factory Management API - Employees
+  description: API documentation for employee-related operations in the Factory Management System.
+
+paths:
+  /employees:
+    post:
+      summary: Create a new employee
+      description: Create a new employee with the specified details.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - name
+              - position
+              - email
+              - phone
+            properties:
+              name:
+                type: string
+                description: Employee's name.
+              position:
+                type: string
+                description: Employee's job position.
+              email:
+                type: string
+                description: Employee's email.
+              phone:
+                type: string
+                description: Employee's phone number.
+      responses:
+        201:
+          description: Employee created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated employees
+      description: Retrieve paginated employees with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default: 1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default: 10, max: 100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('name', 'position', 'email', 'phone') (default: 'name').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sort order ('asc', 'desc') (default: 'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default: true).
+      responses:
+        200:
+          description: Paginated list of employees retrieved successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+  /employees/{employee_id}:
+    get:
+      summary: Get employee by ID
+      description: Retrieve an employee by their ID.
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the employee to retrieve.
+      responses:
+        200:
+          description: Employee retrieved successfully.
+        404:
+          description: Employee not found.
+    put:
+      summary: Update employee by ID
+      description: Update an employee's details by their ID.
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the employee to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Updated name of the employee.
+              position:
+                type: string
+                description: Updated position of the employee.
+              email:
+                type: string
+                description: Updated email of the employee.
+              phone:
+                type: string
+                description: Updated phone number of the employee.
+      responses:
+        200:
+          description: Employee updated successfully.
+        400:
+          description: Validation error.
+        404:
+          description: Employee not found.
+    delete:
+      summary: Delete employee by ID
+      description: Delete an employee by their ID.
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the employee to delete.
+      responses:
+        200:
+          description: Employee deleted successfully.
+        404:
+          description: Employee not found.

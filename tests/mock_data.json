@@ -1,0 +1,107 @@
+{
+    "users": [
+      {
+        "username": "superadmin",
+        "password": "$2b$12$4uQ.EI1JxoMvOZP3T3GZdeErKE8lW8eujpsu2/5wB1a5OjKt9NzaG",
+        "role": "super_admin",
+        "is_active": true,
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      },
+      {
+        "username": "adminuser",
+        "password": "$2b$12$4uQ.EI1JxoMvOZP3T3GZdeErKE8lW8eujpsu2/5wB1a5OjKt9NzaG",
+        "role": "admin",
+        "is_active": true,
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      },
+      {
+        "username": "testuser",
+        "password": "$2b$12$4uQ.EI1JxoMvOZP3T3GZdeErKE8lW8eujpsu2/5wB1a5OjKt9NzaG",
+        "role": "user",
+        "is_active": true,
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      }
+    ],
+    "products": [
+      {
+        "id": 1,
+        "name": "Widget A",
+        "price": 12.5,
+        "stock_quantity": 100,
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      },
+      {
+        "id": 2,
+        "name": "Widget B",
+        "price": 15.0,
+        "stock_quantity": 50,
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      }
+    ],
+    "orders": [
+      {
+        "id": 1,
+        "customer_id": 1,
+        "product_id": 1,
+        "quantity": 5,
+        "total_price": 62.5,
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      }
+    ],
+    "customers": [
+      {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "phone": "123-456-7890",
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      },
+      {
+        "id": 2,
+        "name": "Jane Roe",
+        "email": "jane.roe@example.com",
+        "phone": "098-765-4321",
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      }
+    ],
+    "employees": [
+      {
+        "id": 1,
+        "name": "Jane Smith",
+        "position": "Manager",
+        "email": "jane.smith@example.com",
+        "phone": "987-654-3210",
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      }
+    ],
+    "productions": [
+      {
+        "id": 1,
+        "product_id": 1,
+        "quantity_produced": 100,
+        "date_produced": "2025-01-01",
+        "created_at": "2025-01-01 00:00:00",
+        "updated_at": "2025-01-01 00:00:00",
+        "deleted_at": null
+      }
+    ]
+  }
+  

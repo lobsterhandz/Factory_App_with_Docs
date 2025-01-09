@@ -1,0 +1,123 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Factory Management API - Orders
+  description: API documentation for order-related operations in the Factory Management System.
+
+paths:
+  /orders:
+    post:
+      summary: Create a new order
+      description: Create a new order with the specified details.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - customer_id
+              - product_id
+              - quantity
+            properties:
+              customer_id:
+                type: integer
+                description: ID of the customer placing the order.
+              product_id:
+                type: integer
+                description: ID of the product being ordered.
+              quantity:
+                type: integer
+                description: Quantity of the product being ordered.
+      responses:
+        201:
+          description: Order created successfully.
+        400:
+          description: Validation or creation error.
+        500:
+          description: Internal server error.
+    get:
+      summary: Get paginated orders
+      description: Retrieve paginated orders with optional sorting and metadata.
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number (default: 1).
+        - name: per_page
+          in: query
+          type: integer
+          description: Items per page (default: 10, max: 100).
+        - name: sort_by
+          in: query
+          type: string
+          description: Field to sort by ('created_at', 'quantity', 'total_price') (default: 'created_at').
+        - name: sort_order
+          in: query
+          type: string
+          description: Sorting order ('asc', 'desc') (default: 'asc').
+        - name: include_meta
+          in: query
+          type: boolean
+          description: Include metadata (default: true).
+      responses:
+        200:
+          description: Paginated list of orders retrieved successfully.
+        400:
+          description: Validation error.
+        500:
+          description: Internal server error.
+  /orders/{order_id}:
+    get:
+      summary: Get order by ID
+      description: Retrieve an order by its ID.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the order to retrieve.
+      responses:
+        200:
+          description: Order retrieved successfully.
+        404:
+          description: Order not found.
+    put:
+      summary: Update order by ID
+      description: Update the quantity of an order by its ID.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the order to update.
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              quantity:
+                type: integer
+                description: Updated quantity of the order.
+      responses:
+        200:
+          description: Order updated successfully.
+        400:
+          description: Validation or update error.
+        404:
+          description: Order not found.
+    delete:
+      summary: Delete order by ID
+      description: Delete an order by its ID.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the order to delete.
+      responses:
+        200:
+          description: Order deleted successfully.
+        404:
+          description: Order not found.
