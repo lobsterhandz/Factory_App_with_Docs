@@ -24,6 +24,10 @@ class Config:
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'jwt_secret_key_here')
     PASSWORD_SALT = os.getenv('PASSWORD_SALT', 'salt_key_here')
 
+    # Token Expiry
+    TOKEN_EXPIRY_DAYS = int(os.getenv('TOKEN_EXPIRY_DAYS', 1))  # Default to 1 day if not set
+
+
     def __init__(self):
         """Ensure that necessary environment variables are set."""
         self._check_required_env_variables()

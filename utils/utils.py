@@ -1,100 +1,108 @@
 import jwt
 import datetime
+import logging
 from flask import request, jsonify
 from functools import wraps
 from config import Config
 
+# Initialize Logger
+logger = logging.getLogger(__name__)
 
 # ---------------------------
 # Error Response Utility
 # ---------------------------
 def error_response(message, status_code=400):
-    """Generates a standardized error response."""
-    return jsonify({"error": message}), status_code
-
+    logger.warning(f"Error {status_code}: {message}")
+    response = {"error": message}
+    if Config.DEBUG:  # Add stack trace in debug mode
+        import traceback
+        response["traceback"] = traceback.format_exc()
+    return jsonify(response), status_code
 
 # ---------------------------
 # JWT Token Handling
 # ---------------------------
 def encode_token(user_id, role):
-    """
-    Generates a JWT token with user ID and role as payload.
-    """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),  # Expires in 1 day
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=Config.TOKEN_EXPIRY_DAYS),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id,
             'role': role
         }
-        return jwt.encode(payload, Config.SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, Config.SECRET_KEY, algorithm='HS256')
+        logger.info(f"Token generated for user {user_id} with role {role}.")
+        return token
     except Exception as e:
+        logger.error(f"Token generation error: {str(e)}")
         return str(e)
 
-
-import jwt
-from config import Config
-
 def decode_token(token):
-    """
-    Decodes a JWT token and returns its payload.
-    """
     try:
         payload = jwt.decode(token, Config.SECRET_KEY, algorithms=['HS256'])
         return payload
-    except jwt.ExpiredSignatureError:  # Adjusted for newer pyjwt versions
+    except jwt.ExpiredSignatureError:
+        logger.warning("Token expired.")
         return 'Token expired. Please log in again.'
     except jwt.InvalidTokenError:
+        logger.warning("Invalid token.")
         return 'Invalid token. Please log in again.'
 
+# ---------------------------
+# JWT Required Decorator
+# ---------------------------
+def jwt_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return error_response("Token is missing!", 403)
+        try:
+            token = token.split(" ")[1]
+            payload = decode_token(token)
+            if isinstance(payload, str):
+                return error_response(payload, 403)
+        except Exception as e:
+            logger.error(f"Token validation error: {e}")
+            return error_response("Token is invalid!", 403)
+        return f(*args, **kwargs)
+    return decorated_function
 
 # ---------------------------
 # Role-Based Access Control
 # ---------------------------
 def role_required(required_role):
-    """
-    Decorator to enforce role-based access control.
-    """
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            # Extract Authorization header
             token = request.headers.get('Authorization')
-
             if not token:
                 return error_response("Token is missing!", 403)
-
             try:
-                # Extract Bearer token
                 token = token.split(" ")[1]
                 payload = decode_token(token)
-
-                # Handle token errors
-                if isinstance(payload, str):  # Token decoding issues
+                if isinstance(payload, str):
                     return error_response(payload, 403)
-
-                # Check if the user role meets the requirement
                 user_role = payload['role']
                 if user_role != required_role and user_role != 'super_admin':
+                    logger.warning(f"Unauthorized role: {user_role}")
                     return error_response("Unauthorized access!", 403)
-
             except Exception as e:
+                logger.error(f"Token validation error: {e}")
                 return error_response("Token is invalid!", 403)
-
             return f(*args, **kwargs)
-
         return decorated_function
     return decorator
 
-
 # ---------------------------
-# Token Verification Endpoint
+# Pagination Helper
 # ---------------------------
-def verify_token(token):
-    """
-    Verifies if a token is valid and returns its payload or an error.
-    """
-    payload = decode_token(token)
-    if isinstance(payload, str):  # Error messages
-        return False, payload
-    return True, payload
+def paginate(query, page, per_page, schema=None):
+    items = query.paginate(page, per_page, False)
+    return {
+        "items": schema.dump(items.items) if schema else [item.to_dict() for item in items.items],
+        "total": items.total,
+        "pages": items.pages,
+        "page": items.page,
+        "per_page": items.per_page
+    }

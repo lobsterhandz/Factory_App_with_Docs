@@ -1,3 +1,6 @@
+## NOT IN USE: This YAML file is OPTIONAL if just using Flask-SwaggerUI alone.
+## Current implementation: Flasgger for interactive API documentation - Automatically generates interactive documentation in the Swagger UI, accessible via /docs or a similar route via route decortors in blueprint files (see config).
+
 swagger: '2.0'
 info:
   version: '1.0.0'

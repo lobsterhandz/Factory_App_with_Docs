@@ -1,168 +1,262 @@
 # Factory Management System
 
-## Project Overview
-
-This Flask-based Factory Management System provides an API to manage employees, products, orders, customers, and production records in a factory setting. Additionally, it supports **advanced analytics** for analyzing employee performance, customer lifetime value, and production efficiency. Built with Flask, SQLAlchemy, Flask-Migrate, and Flask-Limiter, it ensures scalability, database migrations, and API rate-limiting.
+## Overview
+The Factory Management System is a Flask-based API designed to streamline factory operations. It supports comprehensive management of employees, products, orders, customers, and production records. Additionally, the system includes analytics capabilities for tracking performance, customer behavior, and production efficiency. Security is ensured through JWT-based authentication and role-based access control.
 
 ---
 
-## Features
+## Key Features
 
-- **Employee Management:** CRUD operations to manage employees.
-- **Product Management:** CRUD operations to manage products.
-- **Order Management:** CRUD operations to manage orders.
-- **Customer Management:** CRUD operations to manage customers.
-- **Production Management:** CRUD operations to manage production records.
-- **Advanced Analytics:** SQLAlchemy-powered queries for performance tracking and business insights.
-- **Rate Limiting:** Prevents abuse with defined API limits.
-- **Database Migrations:** Tracks schema changes using Alembic and Flask-Migrate.
-- **Error Logging:** Logs errors and server activities using RotatingFileHandler.
-- **JWT Security:** Implements token-based authentication and authorization with role-based access control.
-- **Multi-Level Admin Roles:** Supports 'super_admin', 'admin', and 'user' roles for scalability and secure access.
-- **Swagger UI for API docs integrated into app.py via YAML file in static folder
+### Comprehensive Management
+- **Employees**: Add, update, delete, and retrieve employee records.
+- **Products**: Manage factory products, including prices.
+- **Orders**: Place and track orders with pagination and sorting.
+- **Customers**: Handle customer details and lifetime value analysis.
+- **Production**: Record and monitor production data.
+
+### Analytics
+- Employee performance metrics.
+- Top-selling products analysis.
+- Customer lifetime value insights.
+- Production efficiency evaluations.
+
+### Security
+- **JWT Authentication**: Token-based access control.
+- **Role-Based Access**: Restrict access to endpoints based on user roles (`super_admin`, `admin`, `user`).
+
+### Performance Optimization
+- **Caching**: Efficiently handle GET requests using Flask-Caching.
+- **Rate Limiting**: Prevent abuse of endpoints using Flask-Limiter.
+
+### Documentation
+- **Interactive API Documentation**: Flasgger-powered Swagger UI for easy exploration and testing of APIs.
+
+### Logging
+- Track errors and server activities for debugging and monitoring.
 
 ---
 
 ## Tech Stack
 
-- **Backend:** Flask (Python)
-- **Database:** MySQL with SQLAlchemy ORM
-- **API Testing:** Postman
-- **Documentation** SwaggerUI
-- **Rate Limiting:** Flask-Limiter
-- **Migrations:** Flask-Migrate
-- **Authentication:** PyJWT
+- **Backend Framework**: Flask
+- **Database**: MySQL (with SQLAlchemy ORM)
+- **Authentication**: JWT (PyJWT)
+- **Caching**: Flask-Caching
+- **Rate Limiting**: Flask-Limiter
+- **Migrations**: Flask-Migrate
+- **API Documentation**: Flasgger (Swagger UI)
+- **Testing**: Postman
 
 ---
 
-## Folder Structure
+## File Structure
 
 ```
 factory_management/
-├── blueprints/                      # Blueprints for modular route management
-│   ├── employee_blueprint.py
-│   ├── product_blueprint.py
-│   ├── order_blueprint.py
-│   ├── customer_blueprint.py
-│   ├── production_blueprint.py
-│   ├── analytics_blueprint.py       # Analytics API routes for reporting and insights
-│   ├── user_blueprint.py            # User routes for 
-├── migrations/                      # Database migration files
-├── models/                          # Database models
-│   ├── __init__.py                  # Initializes database models
-│   ├── employee.py
-│   ├── product.py
-│   ├── order.py
+├── app.py                        # Main application entry point
+├── blueprints/                   # Modular route management
+│   ├── analytics_blueprint.py    # Analytics API routes
+│   ├── customer_blueprint.py     # Customer API routes
+│   ├── employee_blueprint.py     # Employee API routes
+│   ├── order_blueprint.py        # Order API routes
+│   ├── product_blueprint.py      # Product API routes
+│   ├── production_blueprint.py   # Production API routes
+│   ├── user_blueprint.py         # User authentication and management
+├── config.py                     # Configuration settings
+├── limiter.py                    # Rate limiter setup
+├── logs/                         # Log files for debugging and monitoring
+│   ├── factory_management.log    # Log file
+├── migrations/                   # Database migration files
+├── models/                       # Database models
 │   ├── customer.py
+│   ├── employee.py
+│   ├── order.py
+│   ├── product.py
 │   ├── production.py
-│   ├── user.py                      # User model for authentication
-├── schemas/                         # Schemas for data validation and serialization
-│   ├── __init__.py
+│   ├── user.py
+├── queries/                      # Advanced SQLAlchemy queries
+│   ├── analytics_queries.py
+├── requirements.txt              # Python dependencies
+├── schemas/                      # Marshmallow schemas for data validation
 │   ├── customer_schema.py
 │   ├── employee_schema.py
 │   ├── order_schema.py
 │   ├── product_schema.py
 │   ├── production_schema.py
-│   ├── user_schema.py               # User schema for validation
-├── services/                        # Business logic for API endpoints
-│   ├── __init__.py
+│   ├── user_schema.py
+├── services/                     # Business logic layer
 │   ├── customer_service.py
 │   ├── employee_service.py
 │   ├── order_service.py
 │   ├── product_service.py
 │   ├── production_service.py
-│   ├── user_service.py              # User-specific service layer
-├── queries/                         # Advanced SQLAlchemy queries
-│   ├── __init__.py
-│   ├── analytic_queries.py          # Complex queries for analytics
-├── logs/ # Logs generated for debugging and monitoring
-│   ├── factory_management.log
-├── tests/ 
-│   ├── __init__.py                # Marks the folder as a Python package
-│   ├── mock_data.json             # Centralized mock data for testing
-│   ├── mock_data.py               # Script to load and preprocess mock data
-│   ├── seed_test_data.py          # Script for seeding mock data into the database
-│   ├── test_auth.py               # Tests for authentication endpoints
-│   ├── test_user.py               # Tests for user management endpoints
-│   ├── test_employee.py           # Tests for employee management endpoints
-│   ├── test_product.py            # Tests for product management endpoints
-│   ├── test_order.py              # Tests for order management endpoints
-│   ├── test_customer.py           # Tests for customer management endpoints
-│   ├── test_production.py         # Tests for production management endpoints
-│   ├── test_analytics.py          # Tests for analytics and reporting endpoints
-│   ├── test_utils.py              # Tests for utility functions (e.g., JWT, error responses)
-├── static/
-│   ├── apispec.YAML 
-├── config.py                         # Configuration settings
-├── limiter.py                        # Rate limiter setup
-├── requirements.txt                  # Required Python packages
-├── README.md                         # Project documentation
-├── app.py                            # Main application entry point
-├── utils.py                          # Utility functions (JWT Token Generation)
-├── install.txt                       # Instructions for installation
-├── test_data.py                      # Script to seed test ├── test_auth.py
+│   ├── user_service.py
+├── tests/                        # Unit tests
+├── utils/                        # Utility functions
+│   ├── utils.py                  # Token handling and error response
+└── README.md                     # Project documentation
+```
 
 ---
 
-## Assignment Requirements and Tasks
+## Installation
 
-### Task 1: Define User Model
-- Create a User model to represent users of the factory management system.
-- Attributes:
-  - `id`: Integer, primary key.
-  - `username`: Unique username.
-  - `password`: Hashed password.
-  - `role`: String ('super_admin', 'admin', or 'user').
-- Implement relationships and methods for database interactions.
+### Prerequisites
+- Python 3.10 or higher
+- MySQL 8.0 or higher
+- pip package manager
 
-### Task 2: Implement JWT Token Generation
-- Add `pyjwt` to `requirements.txt`.
-- Create `utils.py` to handle token creation and validation.
-- Define a secret key for signing tokens.
-- Implement a function `encode_token(user_id)` to generate tokens with expiration.
+### Steps
 
-### Task 3: Authentication Logic
-- Create a login function to authenticate users.
-- Generate JWT tokens using `encode_token`.
-- Return the token with a success message.
+1. **Clone the repository**:
 
-### Task 4: Role-Based Access Control
-- Add `@role_required` decorator to validate admin and user roles.
-- Restrict access to sensitive endpoints based on user roles.
-- Ensure **super_admin** can create or manage other admin accounts, while **admin** can only manage non-admin users.
-- Test endpoints to ensure proper authorization enforcement.
+   ```bash
+   git clone https://github.com/your-repo/factory-management.git
+   cd factory-management
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Configure the database**:
+   - Update `config.py` with your MySQL connection details.
+
+4. **Initialize the database**:
+
+   ```bash
+   flask db init
+   flask db migrate
+   flask db upgrade
+   ```
+
+5. **Seed test data (optional)**:
+
+   ```bash
+   python test_data.py
+   ```
+
+6. **Run the application**:
+
+   ```bash
+   python app.py
+   ```
 
 ---
 
-## Route and Role Mapping
+## Usage
 
-| Endpoint                          | HTTP Method | Role Required   | Description                                      |
-|------------------------------------|-------------|------------------|--------------------------------------------------|
-| `/auth/register`                   | POST        | super_admin      | Register new users, including admins.            |
-| `/auth/login`                      | POST        | none             | Authenticate users and generate JWT tokens.      |
-| `/auth/<id>`                       | GET, PUT, DELETE | super_admin   | View, edit, or delete specific users.            |
-| `/employees`                       | GET, POST   | admin            | Manage employee records.                         |
-| `/employees/<id>`                  | GET, PUT, DELETE | admin         | View, edit, or delete specific employee records. |
-| `/products`                        | GET, POST   | admin            | Manage product records.                          |
-| `/products/<id>`                   | GET, PUT, DELETE | admin         | View, edit, or delete specific product records.  |
-| `/orders`                          | GET, POST   | admin, user      | Manage order records.                            |
-| `/orders/<id>`                     | GET, PUT, DELETE | admin         | View, edit, or delete specific order records.    |
-| `/customers`                       | GET, POST   | admin            | Manage customer records.                         |
-| `/customers/<id>`                  | GET, PUT, DELETE | admin         | View, edit, or delete specific customer records. |
-| `/production`                      | GET, POST   | admin            | Manage production records.                       |
-| `/analytics/employee-performance`  | GET         | admin            | Analyze employee performance metrics.            |
-| `/analytics/top-products`          | GET         | admin            | Identify top-selling products.                   |
-| `/analytics/customer-ltv`          | GET         | admin            | Analyze customer lifetime value.                 |
-| `/analytics/production-efficiency` | GET         | admin            | Analyze production efficiency metrics.           |
+### Swagger Documentation
+- **URL**: [http://127.0.0.1:5000/docs](http://127.0.0.1:5000/docs)
+
+- **Capabilities**:
+  - Explore available endpoints.
+  - Test API functionality interactively.
+  - View expected parameters and responses.
+
+### JWT Authentication
+- Obtain a token via the `/login` endpoint.
+- Include the token in the `Authorization` header for protected routes:
+
+   ```http
+   Authorization: Bearer <your_token>
+   ```
+
+### Caching
+- **Caching Layer**: Flask-Caching stores results for GET endpoints to improve performance.
+- **Invalidate Cache**: Modify relevant data (e.g., via POST, PUT, DELETE) to automatically refresh cached results.
+
+**Cached Endpoints Include**:
+- `/employees` (GET)
+- `/products` (GET)
+- `/orders` (GET)
+- `/customers` (GET)
+- `/analytics/*` (GET)
+
+---
+
+## Testing
+
+1. **Install pytest**:
+
+   ```bash
+   pip install pytest
+   ```
+
+2. **Run tests**:
+
+   ```bash
+   pytest tests/
+   ```
+
+3. **Check logs**:
+   - Logs are available in `logs/factory_management.log` for debugging and insights.
+
+---
+
+## Flasgger Implementation and Benefits
+
+### Implementation
+- **Integration**: Flasgger provides an interactive Swagger UI for API documentation.
+- **Configuration**: Defined in `app.py` with details like title, description, and security settings.
+- **Route-level documentation**: Added using `@swag_from` decorators.
+
+**Example Route Documentation**:
+
+```python
+@swag_from({
+    "tags": ["Employees"],
+    "summary": "Create a new employee",
+    "description": "Creates a new employee in the system.",
+    "security": [{"Bearer": []}],
+    "parameters": [
+        {
+            "in": "body",
+            "name": "body",
+            "required": True,
+            "schema": {
+                "type": "object",
+                "required": ["name", "position", "email", "phone"],
+                "properties": {
+                    "name": {"type": "string", "description": "Employee's name."},
+                    "position": {"type": "string", "description": "Job position."},
+                    "email": {"type": "string", "description": "Employee's email."},
+                    "phone": {"type": "string", "description": "Employee's phone number."}
+                }
+            }
+        }
+    ],
+    "responses": {
+        "201": {"description": "Employee created successfully."},
+        "400": {"description": "Validation or creation error."},
+        "500": {"description": "Internal server error."}
+    }
+})
+def create_employee():
+    ...
+```
+
+### Benefits
+- **Interactive Documentation**: Explore and test API endpoints through an intuitive UI.
+- **Simplified Testing**: Test APIs directly in the browser without external tools.
+- **Standardized Format**: Follows OpenAPI Specification (OAS) for compatibility with external tools.
+- **Developer-Friendly**: Reduces the learning curve by clearly defining request and response formats.
+
+---
+
+## Contributions
+
+We welcome contributions! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Submit a pull request with a clear description of your changes.
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
----
-
-## Contributing
-
-Contributions are welcome! Please submit a pull request or open an issue for any suggestions or bug fixes.
