@@ -122,7 +122,7 @@ factory_management/
    ```
 
 3. **Configure the database**:
-   - Update `config.py` with your MySQL connection details.
+   - Update `config.py` and `.env` with your MySQL connection detail / api settings.
 
 4. **Initialize the database**:
 
@@ -135,7 +135,7 @@ factory_management/
 5. **Seed test data (optional)**:
 
    ```bash
-   python test_data.py
+   python tests/mock_data.py
    ```
 
 6. **Run the application**:
